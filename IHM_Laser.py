@@ -4,6 +4,7 @@ import sys
 from PyQt5.QtWidgets import QProgressBar, QGridLayout, QListWidget, QMessageBox, QFrame, QApplication, QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QComboBox, QSlider
 from PyQt5.QtCore import Qt, QRegExp, QRect, QTimer, QPoint
 from PyQt5.QtGui import QDoubleValidator, QRegExpValidator, QPalette, QFont, QImage, QPixmap, QPen, QPainter, QBrush
+from serial import Serial
 import serial.tools.list_ports
 import cv2
 import Laser

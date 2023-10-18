@@ -4,6 +4,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import IHM_Laser as IHM
 from IHM_Laser import *
 
+#lien du répertoire des images
+image_directory = "Images/"
+n=0
 class Main(QMainWindow):
     def __init__(self): # Constructeur de classe
         QMainWindow.__init__(self) # Appel du constructeur de la classe parent
@@ -19,8 +22,10 @@ class Main(QMainWindow):
         self.ui.clear_button.clicked.connect(self.clearing_points)
     
         # Configuration des timers
+        print("Main.init: Setting up timers...")
         QTimer.singleShot(100, self.update_background)
         QTimer.singleShot(250, self.update_progress_bar)
+        QTimer.singleShot(10000, self.save_current_state)
 
     # Méthode pour obtenir les informations sur le dispositif
     def get_device_info(self):
@@ -99,6 +104,19 @@ class Main(QMainWindow):
             # Etablir la connexion à la caméra en utilisant le nom de la caméra
             self.ui.camera_connected = Laser.camera_connection(self.ui.cam)
 
+    # Méthode pour sauvegarder l'état actuel du système
+    def save_current_state(self):
+        #sauvegarde de l'image
+        global n
+        if (self.ui.camera_connected):#SI la caméra est connectée
+            if not os.path.exists(image_directory):#si le dossier n'existe pas
+                os.makedirs(image_directory)#on le crée
+            self.read_camera().save(image_directory+str(n)+".png")
+            n+=1
+        else:
+            print("Main.save_current_state: No camera connected...")
+        QTimer.singleShot(1000, self.save_current_state)
+
     # Méthode pour lire le flux vidéo de la caméra connectée
     def read_camera(self):
         if (self.ui.camera_connected):
@@ -156,6 +174,10 @@ class Main(QMainWindow):
     def update_progress_bar(self):
         if self.ui.controller_connected: # Si le laser est connecté
             Laser.ser.write('Get,SignalLevel,0,Value\n'.encode()) # Envoie une commande pour récupérer la puissance du laser
+            actif = Laser.ser.readline().decode('ascii','replace') # Lire la réponse du laser
+            #print("retour laser = " + actif)
+            self.ui.signal_bar.setValue(int(float(actif)/775*100)) # Mettre à jour la barre de progression et convertir la valeur en pourcentage
+        QTimer.singleShot(250, self.update_progress_bar)# Programmer une nouvelle exécution de la fonction après 250 ms
      #Récupère les coordonnées de la souris (x et y)
 
  #La def pour clear:

@@ -1,4 +1,4 @@
-"""PROGRAMME CONNECTIQUE DU LASER"""
+"""PROGRAMME CONNEx²CTIQUE DU LASER"""
 
 import cv2
 from serial import Serial
