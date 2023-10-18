@@ -95,7 +95,7 @@ class LaserUI(object):
         # Définition des propriétés de la fenêtre
         self.title = 'Laser Controller'
         self.left = 10
-        self.top = 10
+        self.top = 50
         self.width = 400
         self.height = 860
         self.cam = ""
@@ -245,16 +245,22 @@ class LaserUI(object):
         self.device_info_title.resize(400, 20)
         self.device_info_title.setAlignment(Qt.AlignCenter)
 
-        self.device_aqcisition = QPushButton("Acquisition", MainWindow)
-        self.device_aqcisition.setFont(QFont('Arial', 7)) 
-        self.device_aqcisition.resize(180, 30)
-        self.device_aqcisition.move(110,665)
+        self.device_info = QPushButton("Dev info", MainWindow)
+        self.device_info.setFont(QFont('Arial', 7)) 
+        self.device_info.resize(180, 30)
+        self.device_info.move(110,665)
 
         self.device_info_l = QLabel("Controler:\nUndefined\nUndefined\nLaser:\nUndefined\nUndefined", MainWindow)
         self.device_info_l.setFont(QFont('Arial', 8)) 
         self.device_info_l.move(0, 680)
         self.device_info_l.resize(400, 180)
         self.device_info_l.setAlignment(Qt.AlignCenter)
+
+        # Création des widgets pour le retour des informations pour l'acquisition
+        self.device_acquisition = QPushButton("Acquisition", MainWindow)
+        self.device_acquisition.setFont(QFont('Arial', 7)) 
+        self.device_acquisition.resize(180, 30)
+        self.device_acquisition.move(110,825)
                     
 if __name__ == "__main__":
     # Création d'une instance de l'application Qt
