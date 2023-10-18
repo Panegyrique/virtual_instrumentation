@@ -158,10 +158,12 @@ class Main(QMainWindow):
             Laser.ser.write('Get,SignalLevel,0,Value\n'.encode()) # Envoie une commande pour récupérer la puissance du laser
      #Récupère les coordonnées de la souris (x et y)
 
- #La def pour clear:
+    #La def pour clear:
     def clearing_points (self):
         self.ui.camera_return.vider()
-                  
+
+
+
 # Vérifier que ce fichier est le fichier principal qui est exécuté
 if __name__ == "__main__":
     # Créer une instance de QApplication
