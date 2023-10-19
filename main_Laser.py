@@ -17,15 +17,14 @@ class Main(QMainWindow):
         self.ui.device_co_refresh.clicked.connect(self.list_ports_device)
         self.ui.camera_co_connect.clicked.connect(self.connection_camera)
         self.ui.camera_co_refresh.clicked.connect(self.list_ports_camera)
-        self.ui.device_aqcisition.clicked.connect(self.get_device_info)
+        self.ui.device_info.clicked.connect(self.get_device_info)
         self.ui.control_button.clicked.connect(self.handle_beam)
         self.ui.clear_button.clicked.connect(self.clearing_points)
+        self.ui.device_acquisition.clicked.connect(self.Acquisition)
     
         # Configuration des timers
-        print("Main.init: Setting up timers...")
         QTimer.singleShot(100, self.update_background)
         QTimer.singleShot(250, self.update_progress_bar)
-        QTimer.singleShot(10000, self.save_current_state)
 
     # Méthode pour obtenir les informations sur le dispositif
     def get_device_info(self):
@@ -105,17 +104,27 @@ class Main(QMainWindow):
             self.ui.camera_connected = Laser.camera_connection(self.ui.cam)
 
     # Méthode pour sauvegarder l'état actuel du système
-    def save_current_state(self):
-        #sauvegarde de l'image
-        global n
+    def save_image(self):
+        #sauvegarde de l'image 
+        global n 
         if (self.ui.camera_connected):#SI la caméra est connectée
             if not os.path.exists(image_directory):#si le dossier n'existe pas
                 os.makedirs(image_directory)#on le crée
-            self.read_camera().save(image_directory+str(n)+".png")
+            self.read_camera().save(image_directory+"acquisition n°"+str(n)+".png")
             n+=1
         else:
             print("Main.save_current_state: No camera connected...")
-        QTimer.singleShot(1000, self.save_current_state)
+    
+    def Acquisition(self):
+        print("Acquisition")
+        self.save_image()
+        Vu=self.get_VuMetre(pourcentage=1)
+        # inserer la fonction log
+        print("Vu = "+str(Vu))
+        
+
+
+
 
     # Méthode pour lire le flux vidéo de la caméra connectée
     def read_camera(self):
@@ -179,6 +188,18 @@ class Main(QMainWindow):
             self.ui.signal_bar.setValue(int(float(actif)/775*100)) # Mettre à jour la barre de progression et convertir la valeur en pourcentage
         QTimer.singleShot(250, self.update_progress_bar)# Programmer une nouvelle exécution de la fonction après 250 ms
      #Récupère les coordonnées de la souris (x et y)
+
+    def get_VuMetre(self,pourcentage=1):
+        if self.ui.controller_connected: # Si le laser est connecté
+            Laser.ser.write('Get,SignalLevel,0,Value\n'.encode()) # Envoie une commande pour récupérer la puissance du laser
+            actif = Laser.ser.readline().decode('ascii','replace') # Lire la réponse du laser
+            if pourcentage==1:
+                return(int(float(actif)/775*100)) # Renvoie le valeur du VU metre en pourcentage
+            else:
+                return actif # Renvoie le valeur du VU metre
+        else:
+            print("ControlFrame.get_VuMetre: No controller connected...")
+        
 
     #La def pour clear:
     def clearing_points (self):
