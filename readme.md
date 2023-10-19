@@ -13,7 +13,8 @@ git checkout main
 
 # If you want to pull an update
 git fetch
-git add .
+git add . # Only in case of local modification
+git commit -m "name_of_your_update" # Only in case of local modification
 git pull origin main
 
 # If you want to push a modification
