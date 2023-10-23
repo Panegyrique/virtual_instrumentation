@@ -4,6 +4,7 @@ import cv2
 from serial import Serial
 import numpy as np
 import cv2
+from logger import *
 
 # Création d'une connexion série
 ser = Serial()
@@ -73,10 +74,12 @@ def port_connection(port: str) -> bool:
     global ser
     try:
         ser = Serial(port, 115200)
-        print("Connexion au port : " + port + " réussie.")
+        logger.log_port_connection(port, "successful", None)
+        # print("Connexion au port : " + port + " réussie.")
     except Exception as e:
-        print("Connexion au port : " + port + " échouée...")
-        print(e)
+        logger.log_port_connection(port, "failed", e)
+        # print("Connexion au port : " + port + " échouée...")
+        # print(e)
         return False
     return True
 
@@ -86,12 +89,14 @@ def camera_VideoCapture(cam: str):
 
 # Connexion à une caméra
 def camera_connection(cam: str) -> bool:
-	global camera
-	try:
-		camera = cv2.VideoCapture(cam)
-		print("Connection to camera : " + str(cam) + " sucessful.")
-	except Exception as e:
-		print("Connection to camera : " + str(cam) + "  failed...")
-		print(e)
-		return False
-	return True
+    global camera
+    try:
+        camera = cv2.VideoCapture(cam)
+        logger.log_camera_connection(cam, "successful", None)
+        # print("Connection to camera : " + str(cam) + " successful.")
+    except Exception as e:
+        logger.log_camera_connection(cam, "failed", e)
+        # print("Connection to camera : " + str(cam) + "  failed...")
+        # print(e)
+        return False
+    return True

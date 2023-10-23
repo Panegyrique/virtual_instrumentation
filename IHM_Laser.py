@@ -9,6 +9,7 @@ import serial.tools.list_ports
 import cv2
 import Laser
 import os
+from logger import *
 
 
 # Définition d'une classe ImageLabel qui hérite de la classe QLabel
@@ -68,7 +69,9 @@ class ImageLabel(QLabel):
         if event.button() == Qt.LeftButton:
             # Stocke les coordonnées de la souris dans l'attribut "coordinates" et les ajoute à la liste "points"
             self.coordinates=(self.mouse_pos.x(),self.mouse_pos.y())
-            print("Coordonnées de la souris :", self.coordinates)
+            logger.log_mouse_position(self.coordinates)
+            # print("Coordonnées de la souris :", self.coordinates)
+            
             self.points.append(self.coordinates)
             # Définit la couleur et l'épaisseur du stylo utilisé pour dessiner la croix
             pen = QPen(Qt.red, 2, Qt.SolidLine)
