@@ -3,6 +3,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import IHM_Laser as IHM
 from IHM_Laser import *
+from logger import *
 
 #lien du répertoire des images
 image_directory = "Images/"
@@ -33,18 +34,19 @@ class Main(QMainWindow):
             # Envoie de commandes au port série pour obtenir les informations
             Laser.ser.write('GetDevInfo,Controller,0,Name\n'.encode())
             name = Laser.ser.readline().decode('ascii','replace')
-            print(name)
+            # print(name)
             Laser.ser.write('GetDevInfo,Controller,0,Version\n'.encode())
             vers = Laser.ser.readline().decode('ascii','replace')
-            print(vers)
+            # print(vers)
             Laser.ser.write('GetDevInfo,SensorHead,0,Name\n'.encode())
             nameSH = Laser.ser.readline().decode('ascii','replace')
-            print(nameSH)
+            # print(nameSH)
             Laser.ser.write('GetDevInfo,SensorHead,0,Version\n'.encode())
             versSH = Laser.ser.readline().decode('ascii','replace')
-            print(versSH)
+            # print(versSH)
             # Mise à jour de l'interface utilisateur avec les informations obtenues
             self.ui.device_info_l.setText("\nControler:\n"+ name + vers +"Laser:\n"+ nameSH + versSH)
+            logger.log_device_info(name, vers, nameSH, versSH)
 
     # Méthode pour lister les ports disponibles pour le dispositif
     def list_ports_device(self):
@@ -112,19 +114,16 @@ class Main(QMainWindow):
                 os.makedirs(image_directory)#on le crée
             self.read_camera().save(image_directory+"acquisition n°"+str(n)+".png")
             n+=1
-        else:
-            print("Main.save_current_state: No camera connected...")
+        # else:
+        #     print("Main.save_current_state: No camera connected...")
+        logger.log_camera_save(self.ui.camera_connected, image_directory, n)
     
     def Acquisition(self):
-        print("Acquisition")
+        # print("Acquisition")
         self.save_image()
         Vu=self.get_VuMetre(pourcentage=1)
-        # inserer la fonction log
-        print("Vu = "+str(Vu))
-        
-
-
-
+        logger.log_camera_acquisition(Vu)
+        # print("Vu = "+str(Vu))
 
     # Méthode pour lire le flux vidéo de la caméra connectée
     def read_camera(self):
@@ -172,12 +171,15 @@ class Main(QMainWindow):
                 self.ui.control_button.setText("Off") # Mettre à jour le texte du bouton
                 self.ui.control_pan.setStyleSheet("background-color: lime;") # Mettre à jour la couleur de fond de la zone de contrôle
                 Laser.ser.write('Set,SensorHead,0,Laser,1\n'.encode()) # Envoyer une commande pour allumer le faisceau laser
+                logger.log_laser_connect()
             if(actif== "1\n"): # Si le faisceau est allumé
                 self.ui.control_button.setText("On") # Mettre à jour le texte du bouton
                 self.ui.control_pan.setStyleSheet("background-color: pink;") # Mettre à jour la couleur de fond de la zone de contrôle
                 Laser.ser.write('Set,SensorHead,0,Laser,0\n'.encode()) # Envoyer une commande pour éteindre le faisceau laser
-        else:
-            print("ControlFrame.handle_beam: No controller connected...") # Afficher un message d'erreur si le laser n'est pas connecté
+                logger.log_laser_disconnect()
+        # else:
+        #     print("ControlFrame.handle_beam: No controller connected...") # Afficher un message d'erreur si le laser n'est pas connecté
+        logger.log_controller_state(self.ui.controller_connected)
 
     # Méthode pour mettre à jour la barre de progression de la puissance du laser
     def update_progress_bar(self):
@@ -194,17 +196,17 @@ class Main(QMainWindow):
             Laser.ser.write('Get,SignalLevel,0,Value\n'.encode()) # Envoie une commande pour récupérer la puissance du laser
             actif = Laser.ser.readline().decode('ascii','replace') # Lire la réponse du laser
             if pourcentage==1:
+                logger.log_viewmeter_acquisition(int(float(actif)/775*100))
                 return(int(float(actif)/775*100)) # Renvoie le valeur du VU metre en pourcentage
             else:
                 return actif # Renvoie le valeur du VU metre
-        else:
-            print("ControlFrame.get_VuMetre: No controller connected...")
-        
+        # else:
+        #     print("ControlFrame.get_VuMetre: No controller connected...")
+        logger.log_controller_state(self.ui.controller_connected)
 
     #La def pour clear:
     def clearing_points (self):
         self.ui.camera_return.vider()
-
 
 
 # Vérifier que ce fichier est le fichier principal qui est exécuté
