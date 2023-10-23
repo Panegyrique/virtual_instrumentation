@@ -38,9 +38,8 @@ class Log():
         else:
             self.logger.info("Connection to camera %s %s "%(str(cam), state))
     
-    def log_camera_acquisition(self, Vu):
+    def log_camera_acquisition(self):
         self.logger.info("Acquisition of camera")
-        self.logger.info("Vu = %s"%str(Vu))
     
     def log_camera_save(self, state, image_directory, n):
         if not state:

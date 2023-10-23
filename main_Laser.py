@@ -120,9 +120,9 @@ class Main(QMainWindow):
     
     def Acquisition(self):
         # print("Acquisition")
+        logger.log_camera_acquisition()
         self.save_image()
-        Vu=self.get_VuMetre(pourcentage=1)
-        logger.log_camera_acquisition(Vu)
+        Vu=self.get_VuMetre(pourcentage=1)        
         # print("Vu = "+str(Vu))
 
     # Méthode pour lire le flux vidéo de la caméra connectée
