@@ -16,8 +16,8 @@ git pull origin main
 git status
 git add . 
 git commit -m "name_of_update"
-git branch -M main // Only the first time in case of an empty repository
-git checkout main // Only the first time after creation of main branch
+git branch -M main # Only the first time in case of an empty repository
+git checkout main # Only the first time after creation of main branch
 git push origin main
 ```
 
