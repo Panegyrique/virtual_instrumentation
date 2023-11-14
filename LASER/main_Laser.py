@@ -5,12 +5,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import IHM_Laser as IHM
 from IHM_Laser import *
 
-logger_path = sys.path[0].replace('LASER', 'LOGGER')
+logger_path = sys.path[0].replace('LASER', '')
 try : 
     sys.path.append(logger_path)
 except :
     print("Error during import of path")
-from LOGGER.logger import *
+from LOGGER.logger import write_log
 
 #lien du répertoire des images
 image_directory = "Images/"
@@ -53,7 +53,7 @@ class Main(QMainWindow):
             # print(versSH)
             # Mise à jour de l'interface utilisateur avec les informations obtenues
             self.ui.device_info_l.setText("\nControler:\n"+ name + vers +"Laser:\n"+ nameSH + versSH)
-            logger.log_device_info(name, vers, nameSH, versSH)
+            write_log.log_device_info(name, vers, nameSH, versSH)
 
     # Méthode pour lister les ports disponibles pour le dispositif
     def list_ports_device(self):
@@ -123,11 +123,11 @@ class Main(QMainWindow):
             n+=1
         # else:
         #     print("Main.save_current_state: No camera connected...")
-        logger.log_camera_save(self.ui.camera_connected, image_directory, n)
+        write_log.log_camera_save(self.ui.camera_connected, image_directory, n)
     
     def Acquisition(self):
         # print("Acquisition")
-        logger.log_camera_acquisition()
+        write_log.log_camera_acquisition()
         self.save_image()
         Vu=self.get_VuMetre(pourcentage=1)        
         # print("Vu = "+str(Vu))
@@ -178,15 +178,15 @@ class Main(QMainWindow):
                 self.ui.control_button.setText("Off") # Mettre à jour le texte du bouton
                 self.ui.control_pan.setStyleSheet("background-color: lime;") # Mettre à jour la couleur de fond de la zone de contrôle
                 Laser.ser.write('Set,SensorHead,0,Laser,1\n'.encode()) # Envoyer une commande pour allumer le faisceau laser
-                logger.log_laser_connect()
+                write_log.log_laser_connect()
             if(actif== "1\n"): # Si le faisceau est allumé
                 self.ui.control_button.setText("On") # Mettre à jour le texte du bouton
                 self.ui.control_pan.setStyleSheet("background-color: pink;") # Mettre à jour la couleur de fond de la zone de contrôle
                 Laser.ser.write('Set,SensorHead,0,Laser,0\n'.encode()) # Envoyer une commande pour éteindre le faisceau laser
-                logger.log_laser_disconnect()
+                write_log.log_laser_disconnect()
         # else:
         #     print("ControlFrame.handle_beam: No controller connected...") # Afficher un message d'erreur si le laser n'est pas connecté
-        logger.log_controller_state(self.ui.controller_connected)
+        write_log.log_controller_state(self.ui.controller_connected)
 
     # Méthode pour mettre à jour la barre de progression de la puissance du laser
     def update_progress_bar(self):
@@ -203,13 +203,13 @@ class Main(QMainWindow):
             Laser.ser.write('Get,SignalLevel,0,Value\n'.encode()) # Envoie une commande pour récupérer la puissance du laser
             actif = Laser.ser.readline().decode('ascii','replace') # Lire la réponse du laser
             if pourcentage==1:
-                logger.log_viewmeter_acquisition(int(float(actif)/775*100))
+                write_log.log_viewmeter_acquisition(int(float(actif)/775*100))
                 return(int(float(actif)/775*100)) # Renvoie le valeur du VU metre en pourcentage
             else:
                 return actif # Renvoie le valeur du VU metre
         # else:
         #     print("ControlFrame.get_VuMetre: No controller connected...")
-        logger.log_controller_state(self.ui.controller_connected)
+        write_log.log_controller_state(self.ui.controller_connected)
 
     #La def pour clear:
     def clearing_points (self):

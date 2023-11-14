@@ -10,13 +10,12 @@ import cv2
 import Laser
 import os
 
-logger_path = sys.path[0].replace('LASER', 'LOGGER')
+logger_path = sys.path[0].replace('LASER', '')
 try : 
     sys.path.append(logger_path)
 except :
     print("Error during import of path")
-from LOGGER.logger import *
-
+from LOGGER.logger import write_log
 
 # Définition d'une classe ImageLabel qui hérite de la classe QLabel
 class ImageLabel(QLabel):
@@ -75,7 +74,7 @@ class ImageLabel(QLabel):
         if event.button() == Qt.LeftButton:
             # Stocke les coordonnées de la souris dans l'attribut "coordinates" et les ajoute à la liste "points"
             self.coordinates=(self.mouse_pos.x(),self.mouse_pos.y())
-            logger.log_mouse_position(self.coordinates)
+            write_log.log_mouse_position(self.coordinates)
             # print("Coordonnées de la souris :", self.coordinates)
             
             self.points.append(self.coordinates)

@@ -5,12 +5,12 @@ from serial import Serial
 import numpy as np
 import sys
 
-logger_path = sys.path[0].replace('LASER', 'LOGGER')
+logger_path = sys.path[0].replace('LASER', '')
 try : 
     sys.path.append(logger_path)
 except :
     print("Error during import of path")
-from LOGGER.logger import *
+from LOGGER.logger import write_log
 
 # Création d'une connexion série
 ser = Serial()
@@ -80,10 +80,10 @@ def port_connection(port: str) -> bool:
     global ser
     try:
         ser = Serial(port, 115200)
-        logger.log_port_connection(port, "successful", None)
+        write_log.log_port_connection(port, "successful", None)
         # print("Connexion au port : " + port + " réussie.")
     except Exception as e:
-        logger.log_port_connection(port, "failed", e)
+        write_log.log_port_connection(port, "failed", e)
         # print("Connexion au port : " + port + " échouée...")
         # print(e)
         return False
@@ -98,10 +98,10 @@ def camera_connection(cam: str) -> bool:
     global camera
     try:
         camera = cv2.VideoCapture(cam)
-        logger.log_camera_connection(cam, "successful", None)
+        write_log.log_camera_connection(cam, "successful", None)
         # print("Connection to camera : " + str(cam) + " successful.")
     except Exception as e:
-        logger.log_camera_connection(cam, "failed", e)
+        write_log.log_camera_connection(cam, "failed", e)
         # print("Connection to camera : " + str(cam) + "  failed...")
         # print(e)
         return False

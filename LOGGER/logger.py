@@ -56,4 +56,4 @@ class Log():
 
 # Permet de ne construire qu'une fois Log() notamment pour le fichier app.log
 # Il suffit simplement d'importer logger.py pour pouvoir utiliser la variable sans avoir à construire un nouveau Log()
-logger = Log()
+write_log = Log()
