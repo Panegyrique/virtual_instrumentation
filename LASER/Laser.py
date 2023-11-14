@@ -3,8 +3,14 @@
 import cv2
 from serial import Serial
 import numpy as np
-import cv2
-from logger import *
+import sys
+
+logger_path = sys.path[0].replace('LASER', 'LOGGER')
+try : 
+    sys.path.append(logger_path)
+except :
+    print("Error during import of path")
+from LOGGER.logger import *
 
 # Création d'une connexion série
 ser = Serial()

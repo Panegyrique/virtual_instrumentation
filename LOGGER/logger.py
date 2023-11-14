@@ -4,8 +4,11 @@ import os
 class Log():
 
     def __init__(self):
-        if os.path.exists('app.log'):
-            os.remove('app.log')
+        file_path = '../app.log'
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        log_directory = os.path.dirname(os.path.abspath(file_path))
+        os.chdir(log_directory)
         logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         logging.info('Init log file')
         self.logger = logging.getLogger(__name__)

@@ -9,7 +9,13 @@ import serial.tools.list_ports
 import cv2
 import Laser
 import os
-from logger import *
+
+logger_path = sys.path[0].replace('LASER', 'LOGGER')
+try : 
+    sys.path.append(logger_path)
+except :
+    print("Error during import of path")
+from LOGGER.logger import *
 
 
 # Définition d'une classe ImageLabel qui hérite de la classe QLabel

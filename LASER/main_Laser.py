@@ -1,9 +1,16 @@
 """PROGRAMME PRINCIPAL DU LASER"""
 
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 import IHM_Laser as IHM
 from IHM_Laser import *
-from logger import *
+
+logger_path = sys.path[0].replace('LASER', 'LOGGER')
+try : 
+    sys.path.append(logger_path)
+except :
+    print("Error during import of path")
+from LOGGER.logger import *
 
 #lien du répertoire des images
 image_directory = "Images/"
