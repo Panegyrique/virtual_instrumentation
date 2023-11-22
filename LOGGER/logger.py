@@ -17,6 +17,12 @@ class Log():
         if not state:
             self.logger.error("ControlFrame.handle_beam: No controller connected...")
 
+#######################
+#
+#   LASER / CAMERA
+#
+#######################
+
     def log_laser_connect(self):
         self.logger.info("Laser is now connected")
 
@@ -52,6 +58,30 @@ class Log():
 
     def log_device_info(self, name, vers, nameSH, versSH):
         self.logger.info("Controler: %s %s, Laser: %s %s"%(str(name), str(vers), str(nameSH), str(versSH)))
+
+#######################
+#
+#   MOTORS
+#
+#######################
+
+    def log_motors_connect(self):
+        self.logger.info("Motors are now connected")
+
+    def log_motors_disconnect(self):
+        self.logger.info("Motors are now disconnected")
+
+    def log_motors_initiated(self):
+        self.logger.info("Motors are now initiated")
+
+    def log_motors_move_forward(self,axis,step):
+        self.logger.info("Axis %s is moving forward by %s mm"%(str(axis),str(step)))
+    
+    def log_motors_move_backward(self,axis,step):
+        self.logger.info("Axis %s is moving backward by %s mm"%(str(axis),str(step)))
+
+    def log_motors_position(self,x,y,z):
+        self.logger.info("Motors position is x: %s, y: %s, z: %s "%(str(x),str(y),str(z)))
 
 
 # Permet de ne construire qu'une fois Log() notamment pour le fichier app.log
